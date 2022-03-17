@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 const App = () => {
+    /*
     const question = {
         img: "https://picsum.photos/200",
         sentence: "Hello, welcome to ODC!"
@@ -19,7 +20,8 @@ const App = () => {
             sentence: "Let's learn ReactJS"
         }
     ]
-    const sentence = "Hello, welcome to ODC!"
+    */
+    const sentence = "Hello, welcome to ODC!, by orange"
     const shuffleArray = (array) => {
         for (let i = array.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * i);
@@ -29,24 +31,29 @@ const App = () => {
         }
         return array;
     }
-    const questionStyle = {
-        margin: "1rem",
-        padding: "1rem"
-    }
 
     const [answer, setAnswer] = useState([])
 
+    const offTagClick = (val) => {
+        setAnswer(answer.filter(e => e !== val))
+    }
 
-    const onTagClick= (val) =>{
+
+    const onTagClick = (val) => {
         /*alert(val);
         let newArray=answer.map((x) =>x);
         newArray.push(val);
         setAnswer(newArray);
         //answer.push(val);
         console.log(answer);*/
-        setAnswer(Array.from(new Set([...answer,val])))
-
-
+        setAnswer(Array.from(new Set([...answer, val])))
+        if (sentence.split(" ").length - 1 === answer.length) {
+            let check = true
+            for (let i = 0; i < sentence.split(" ").length - 1 && check; i++) {
+                if (sentence.split(" ")[i] !== answer[i]) { check = false }
+            }
+            console.log(check ? "ordered" : "unordered");
+        }
     }
 
     return (
@@ -62,18 +69,34 @@ const App = () => {
                 
             </div>
             ))}*/}
-            
+
             <div className='box question'>
-                <img src="https://picsum.photos/200/300" alt="Question image" />
+                <img src="https://picsum.photos/200/300" alt="Question" />
                 <div className="tags">
-                    {shuffleArray(sentence.split(" ")).map((mot, k) => (
-                        <span key={k} style={{cursor:'pointer'}} className="tag" onClick={() =>onTagClick(mot)}>{mot}</span>
-                    ))}
+                    {shuffleArray(sentence.split(" ")).map((mot, k) => {
+                        if (!answer.includes(mot)) {
+                            return (
+                                <span key={k} style={{ cursor: 'pointer' }} className="tag" onClick={() => onTagClick(mot)}>{mot}</span>
+                            )
+                        } else{
+                            return ''
+                        }
+                    })
+                    }
+                </div>
+                <div className="tags">
+                    {shuffleArray(sentence.split(" "))
+                        .filter(e => !answer.includes(e))
+                        .map((mot, k) => (
+                                <span key={k} style={{ cursor: 'pointer' }} className="tag" onClick={() => onTagClick(mot)}>{mot}</span>
+                            )
+                        )
+                    }
                 </div>
                 <hr />
                 <div className="tags">
                     {answer.map((mot, k) => (
-                        <span key={k} className="tag">{mot}</span>
+                        <span key={k} style={{ cursor: 'pointer' }} onClick={() => offTagClick(mot)} className="tag">{mot}</span>
                     ))}
                 </div>
             </div>
